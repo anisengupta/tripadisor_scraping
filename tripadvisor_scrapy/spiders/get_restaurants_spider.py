@@ -3,11 +3,12 @@ import pandas as pd
 from tripadvisor_scrapy.settings import restaurant_save_path, url_save_path
 
 
-def get_starting_urls(filepath: str) -> list:
-    return pd.read_csv(filepath)["url"].unique().tolist()
-
-
 class TripAdvisorRestaurantSpider(scrapy.Spider):
+    """
+    Gets all the restaurant information from each individual page.
+
+    """
+
     name = "trip_advisor_restaurants"
 
     custom_settings = {
@@ -15,9 +16,7 @@ class TripAdvisorRestaurantSpider(scrapy.Spider):
         "FEEDS": {restaurant_save_path: {"format": "csv", "overwrite": False}},
     }
 
-    def start_requests(self):
-        start_url = get_starting_urls(url_save_path)[0]
-        yield scrapy.Request(start_url, meta={'playwright': True})
+    start_urls = pd.read_csv(url_save_path)["url"].unique().tolist()
 
     def parse(self, response):
         for item in response.css("div.page"):
@@ -31,5 +30,5 @@ class TripAdvisorRestaurantSpider(scrapy.Spider):
                 "location": response.css("a.AYHFM::text").get(),
                 "category_rating": response.css("div.cNFlb").getall(),
             }
-        
+
         print(f"Processed {response.url}")

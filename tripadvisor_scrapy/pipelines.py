@@ -25,6 +25,11 @@ class ExtractURLToCSV(object):
 
 
 class ExtractRestaurantToCSV(object):
+    """
+    Parses the restaurant information to a csv file.
+
+    """
+
     def process_item(self, item, spider):
         names = dict(item)["name"]
         urls = dict(item)["url"]

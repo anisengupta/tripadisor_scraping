@@ -3,6 +3,11 @@ from tripadvisor_scrapy.settings import start_url, url_save_path
 
 
 class TripAdvisorURLSpider(scrapy.Spider):
+    """
+    Scrapes the initial page for all restaurant urls to collect a master list.
+
+    """
+
     name = "trip_advisor_urls"
 
     custom_settings = {
